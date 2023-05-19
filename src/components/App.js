@@ -1,27 +1,29 @@
 import { useEffect } from 'react';
-import { ethers } from 'ethers';
-import '../App.css';
-import TOKEN_ABI from '../abis/Token.json'
-import config from '../config.json' 
+import { useDispatch } from 'react-redux'
+import {
+  loadProvider,
+  loadNetwork,
+  loadAccount,
+  loadToken 
+} from '../store/interactions';
+import config from '../config.json'
+
 
 function App() {
 
-  //funtion to load blockchain
+  const dispatch = useDispatch()
+
+  //function to load blockchain
   const loadBlockchainData = async () => {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-    console.log(accounts[0])
+    await loadAccount(dispatch)
 
     //connect Ethers to blockchain
-    const provider = new ethers.providers.Web3Provider(window.ethereum) // window.ethereum is the connection with metamask
-    const { chainId } = await provider.getNetwork() // the {} calls the specific value corresponding the tag from object 
-    console.log(chainId)
+    const provider = loadProvider(dispatch)
+    const chainId = await loadNetwork(provider, dispatch) 
 
     //connect to Token smart contract
-    const token = new ethers.Contract(config[chainId].Efris.address, TOKEN_ABI, provider)
-    console.log(token.address)
-    const symbol = await token.symbol()
-    console.log(symbol)
-
+    await loadToken(provider, config[chainId].Efris.address, dispatch)
+    
   }
 
 
