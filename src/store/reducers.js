@@ -18,19 +18,53 @@ export const provider = (state = {}, action) => { //default state is empty objec
         account: action.account
       }
 
+    case 'ETHER_BALANCE_LOADED':
+      return {
+        ...state,
+        balance: action.balance
+      }
+
     default:
       return state
   }
 }
 
-export const token = (state = { loaded: false, contract: null}, action) => { //new reducers need to be added to store
+const DEFAULT_TOKENS_STATE = {
+  loaded: false,
+  contracts: [],
+  symbols: []
+}
+
+export const token = (state = DEFAULT_TOKENS_STATE, action) => { //new reducers need to be added to store
   switch (action.type) {
-    case 'TOKEN_LOADED':
+    case 'TOKEN_1_LOADED':
       return {
         ...state,
         loaded: true,
-        contract: action.token,
-        symbil: action.symbol
+        contracts: [...state.contracts, action.token],
+        symbols: [...state.symbols, action.symbol] 
+      }
+
+    case 'TOKEN_2_LOADED':
+      return {
+        ...state,
+        loaded: true,
+        contracts: [...state.contracts, action.token],
+        symbols: [...state.symbols, action.symbol] 
+      }
+
+    default:
+      return state
+  }
+}
+
+export const exchange = (state = { loaded: false, contract: {} }, action) => { 
+  switch (action.type) {
+    case 'EXCHANGE_LOADED':
+      return {
+        ...state,
+        loaded: true,
+        contract: action.exchange
       }
 
     default:

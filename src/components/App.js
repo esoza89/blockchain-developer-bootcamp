@@ -4,7 +4,8 @@ import {
   loadProvider,
   loadNetwork,
   loadAccount,
-  loadToken 
+  loadTokens,
+  loadExchange 
 } from '../store/interactions';
 import config from '../config.json'
 
@@ -15,14 +16,22 @@ function App() {
 
   //function to load blockchain
   const loadBlockchainData = async () => {
-    await loadAccount(dispatch)
 
     //connect Ethers to blockchain
     const provider = loadProvider(dispatch)
     const chainId = await loadNetwork(provider, dispatch) 
 
-    //connect to Token smart contract
-    await loadToken(provider, config[chainId].Efris.address, dispatch)
+    await loadAccount(provider, dispatch)
+
+
+    //connect to Token smart contracts
+    const Efris = config[chainId].Efris
+    const mETH = config[chainId].mETH 
+    await loadTokens(provider, [Efris.address, mETH.address], dispatch)
+
+    //connect to exchange smart contract
+    const exchangeConfig = config[chainId].exchange
+    await loadExchange(provider, exchangeConfig.address, dispatch)
     
   }
 
