@@ -8,6 +8,7 @@ import {
   loadExchange 
 } from '../store/interactions';
 import config from '../config.json'
+import Navbar from './Navbar.js'
 
 
 function App() {
@@ -19,9 +20,18 @@ function App() {
 
     //connect Ethers to blockchain
     const provider = loadProvider(dispatch)
+
+    //fetch current network chanId
     const chainId = await loadNetwork(provider, dispatch) 
 
-    await loadAccount(provider, dispatch)
+    //Reload page when network changes
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload()
+    })
+
+    window.ethereum.on('accountsChanged', async () => {
+      await loadAccount(provider, dispatch)
+    })
 
 
     //connect to Token smart contracts
@@ -44,7 +54,7 @@ function App() {
   return (
     <div>
 
-      {/* Navbar */}
+      <Navbar />
 
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>

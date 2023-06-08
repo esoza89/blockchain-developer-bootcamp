@@ -9,7 +9,7 @@ export const provider = (state = {}, action) => { //default state is empty objec
     case 'NETWORK_LOADED':
       return {
         ...state,
-        chainID: action.chainId
+        chainId: action.chainId
       }
 
     case 'ACCOUNT_LOADED':
