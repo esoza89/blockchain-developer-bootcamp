@@ -9,7 +9,7 @@ import {
 } from '../store/interactions';
 import config from '../config.json'
 import Navbar from './Navbar.js'
-
+import Markets from './Markets.js'
 
 function App() {
 
@@ -59,7 +59,7 @@ function App() {
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>
 
-          {/* Markets */}
+          <Markets />
 
           {/* Balance */}
 

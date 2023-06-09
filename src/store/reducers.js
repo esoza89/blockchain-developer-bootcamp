@@ -41,15 +41,15 @@ export const token = (state = DEFAULT_TOKENS_STATE, action) => { //new reducers 
       return {
         ...state,
         loaded: true,
-        contracts: [...state.contracts, action.token],
-        symbols: [...state.symbols, action.symbol] 
+        contracts: [action.token], // replaced contracts to one token only
+        symbols: [action.symbol] 
       }
 
     case 'TOKEN_2_LOADED':
       return {
         ...state,
         loaded: true,
-        contracts: [...state.contracts, action.token],
+        contracts: [...state.contracts, action.token], //added to contract 2nd token
         symbols: [...state.symbols, action.symbol] 
       }
 
