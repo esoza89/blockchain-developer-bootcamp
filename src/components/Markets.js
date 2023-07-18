@@ -1,13 +1,11 @@
 import config from '../config.json'
 import { useSelector, useDispatch } from 'react-redux'
-import { loadTokens } from '../store/interactions.js'
+import { loadTokens } from '../store/interactions'
 
 
 const Markets = () => {
   const provider = useSelector(state => state.provider.connection)
   const chainId = useSelector(state => state.provider.chainId)
-  //const address1 = config[chainId].Efris.address
-  //const address2 = config[chainId].mETH.address
   const dispatch= useDispatch()
 
   const marketHandler = async (e) => {
@@ -30,7 +28,6 @@ const Markets = () => {
             <p>Not deployed to Network</p>
           </div>
         )}
-
 
       <hr />
     </div>

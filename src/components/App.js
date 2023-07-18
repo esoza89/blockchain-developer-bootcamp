@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
 import {
   loadProvider,
   loadNetwork,
   loadAccount,
   loadTokens,
-  loadExchange 
+  loadExchange,
+  subscribeToEvents 
 } from '../store/interactions';
-import config from '../config.json'
-import Navbar from './Navbar.js'
-import Markets from './Markets.js'
+import config from '../config.json';
+import Navbar from './Navbar'
+import Markets from './Markets'
+import Balance from './Balance'
 
 function App() {
 
@@ -29,8 +31,8 @@ function App() {
       window.location.reload()
     })
 
-    window.ethereum.on('accountsChanged', async () => {
-      await loadAccount(provider, dispatch)
+    window.ethereum.on('accountsChanged', () => {
+      loadAccount(provider, dispatch)
     })
 
 
@@ -41,7 +43,9 @@ function App() {
 
     //connect to exchange smart contract
     const exchangeConfig = config[chainId].exchange
-    await loadExchange(provider, exchangeConfig.address, dispatch)
+    const exchange = await loadExchange(provider, exchangeConfig.address, dispatch)
+
+    subscribeToEvents(exchange, dispatch)
     
   }
 
@@ -61,8 +65,8 @@ function App() {
 
           <Markets />
 
-          {/* Balance */}
-
+          <Balance />
+          
           {/* Order */}
 
         </section>
