@@ -6,13 +6,15 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
-  subscribeToEvents 
+  subscribeToEvents,
+  loadAllOrders 
 } from '../store/interactions';
 import config from '../config.json';
 import Navbar from './Navbar'
 import Markets from './Markets'
 import Balance from './Balance'
 import Order from './Order'
+import OrderBook from './OrderBook'
 
 function App() {
 
@@ -45,6 +47,9 @@ function App() {
     //connect to exchange smart contract
     const exchangeConfig = config[chainId].exchange
     const exchange = await loadExchange(provider, exchangeConfig.address, dispatch)
+
+    //fetch all orders, opened, filled, canceled
+    loadAllOrders(provider, exchange, dispatch)
 
     subscribeToEvents(exchange, dispatch)
     
@@ -79,7 +84,7 @@ function App() {
 
           {/* Trades */}
 
-          {/* OrderBook */}
+          <OrderBook />
 
         </section>
       </main>
