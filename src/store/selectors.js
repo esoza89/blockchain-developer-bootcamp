@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { get, groupBy, reject } from 'lodash';
+import { get, groupBy, reject, maxBy, minBy } from 'lodash';
 import { ethers } from 'ethers';
 import moment from 'moment'
 
@@ -117,4 +117,67 @@ const decorateOrderBookOrder = (order, tokens) => {
 		orderTypeClass: (orderType === 'buy' ? GREEN : RED),
 		orderFillAction: (orderType === 'buy' ? 'sell' : 'buy')
 	})
+}
+
+
+//---------------Price Chart
+
+export const priceChartSelector = createSelector(
+	filledOrders,
+	tokens,
+	(orders, tokens) => {
+
+		if(!tokens[0] || !tokens[1]) { return }
+
+		//filtering by market pairs
+		orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address)
+		orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
+
+		//sort orders by date ascending
+		orders = orders.sort((a, b) => a.timestamp - b.timestamp)
+
+		//decorate orders - add display attributes
+		orders = orders.map((o) => decorateOrder(o, tokens))
+
+		//get array of two last orders trimming last two values from whole array
+		let secondLastOrder, lastOrder
+		[secondLastOrder, lastOrder] = orders.slice(orders.lenght - 2, orders.lenght)
+
+		const lastPrice = get(lastOrder, 'tokenPrice', 0)
+		const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0)
+
+		return({
+			lastPrice,
+			lastPriceChange: (lastPrice >= secondLastPrice ? '+' : '-'),
+			series: [{
+				data: buildGraphData(orders)
+			}]
+		})
+	}
+)
+
+const buildGraphData = (orders) => {
+	//group the orders by hour for the graph
+	orders = groupBy(orders, (o) => moment.unix(o.timestamp).startOf('hour').format())
+
+	const hours = Object.keys(orders) // makes a relation between hours and the orders
+
+	const graphData = hours.map((hour) => {
+		//fectch orders in a given hour
+		const group = orders[hour]
+
+		//calculate open, high, low and close
+		//orders are time sorted so first is open
+		const open = group[0]
+		const high = maxBy(group, 'tokenPrice')
+		const low = minBy(group, 'tokenPrice')
+		const close = group[group.length - 1]
+
+		return({
+			x: new Date(hour),
+			y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+		})
+	})
+
+	return graphData
 }
