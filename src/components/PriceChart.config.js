@@ -58,6 +58,7 @@ export const options = {
     }
   },
   yaxis: {
+    decimalsInFloat: 2,
     labels: {
       show: true,
       minWidth: 0,
