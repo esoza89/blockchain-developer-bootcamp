@@ -22,5 +22,21 @@
 	"5": {
 		"explorerURL": "https://goerli.etherscan.io/"
 		
+	},
+
+	"11155111": {
+		"exchange": {
+			"address": "0x5edd65743327ae3a6E81910c9d50480c8Fb99c71"
+		},
+		"Efris": {
+			"address": "0xc2d39c04A70d1b0270bd1B91249b4a5C14cCDb02"
+		},
+		"Karen": {
+			"address": "0x7890F4Ea5b61C5d8D4449440cE98891E58759d9f"
+		},
+		"mETH": {
+			"address": "0x5DC62BB4084328D4c60f153ed54f83F8fc19Ea6F"
+		},
+		"explorerURL": "https://sepolia.etherscan.io/"
 	}
 }
