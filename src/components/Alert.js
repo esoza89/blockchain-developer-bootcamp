@@ -6,7 +6,7 @@ import config from '../config.json';
 const Alert = () => {
   const alertRef = useRef(null)
   const account = useSelector(state => state.provider.account)
-  const network = useSelector(state => state.provider.network)
+  const network = useSelector(state => state.provider.chainId)
   const isPending = useSelector(state => state.exchange.transaction.isPending)
   const isError = useSelector(state => state.exchange.transaction.isError)
   const events = useSelector(myEventsSelector)
@@ -15,6 +15,8 @@ const Alert = () => {
   const removeHandler = async (e) => {
     alertRef.current.className = 'alert alert--remove'
   }
+
+
   useEffect(() => {
     if((events[0] || isPending || isError) && account) {
       alertRef.current.className = 'alert'
